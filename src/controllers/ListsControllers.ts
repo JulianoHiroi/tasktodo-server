@@ -48,11 +48,11 @@ class ListsControllers {
   public async updateList(req: Request, res: Response) {
     try {
       const { name } = req.body;
+      const { id } = req.params;
       const existingList = await prisma.list.findUnique({ where: { name } });
-      if (existingList) {
+      if (existingList && existingList.id !== id) {
         return res.status(409).json({ message: "List name already exists" });
       } else {
-        const { id } = req.params;
         const list = await prisma.list.update({
           data: {
             ...req.body,
