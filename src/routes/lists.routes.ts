@@ -4,6 +4,7 @@ import ListsControllers from "../controllers/ListsControllers";
 const listsRouter = Router();
 
 listsRouter.get("/", ListsControllers.findAllLists);
+listsRouter.get("/:id", ListsControllers.findList);
 listsRouter.post("/create", ListsControllers.createList);
 listsRouter.patch("/update/:id", ListsControllers.updateList);
 listsRouter.delete("/delete/:id", ListsControllers.deleteList);

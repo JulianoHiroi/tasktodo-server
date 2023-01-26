@@ -10,12 +10,39 @@ class ListsControllers {
         orderBy: {
           position: "asc",
         },
+        include: {
+          tasks: true,
+        },
       });
 
       if (list.length === 0) {
         return res
           .status(404)
           .json({ message: "No momento não existe nenhum usuario." });
+      } else {
+        return res.send(list);
+      }
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ message: "Internal server error" });
+    } finally {
+      await prisma.$disconnect();
+    }
+  }
+  public async findList(req: Request, res: Response) {
+    const { id } = req.params;
+    try {
+      const list = await prisma.list.findUnique({
+        where: { id },
+        include: {
+          tasks: true,
+        },
+      });
+
+      if (!list) {
+        return res
+          .status(404)
+          .json({ message: "No momento não existe esta lista." });
       } else {
         return res.json(list);
       }
@@ -26,7 +53,6 @@ class ListsControllers {
       await prisma.$disconnect();
     }
   }
-
   public async createList(req: Request, res: Response) {
     try {
       const { name, position, color } = req.body;
@@ -35,7 +61,7 @@ class ListsControllers {
         const list = await prisma.list.create({
           data: { name, position, color },
         });
-        return res.status(201).json(list);
+        return res.status(201).send(list);
       }
       return res.json({ message: "Já exite uma lista com esse nome" });
     } catch (err) {

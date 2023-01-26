@@ -23,6 +23,6 @@ model Task {
   name        String @unique
   description String
   degree      Int
-  list        String
-  listId      List   @relation(fields: [list], references: [name])
+  listId      String
+  list        List   @relation(fields: [listId], references: [id])
 }

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { PrismaClient } from "@prisma/client";
 import listsRouter from "./lists.routes";
+import tasksRouter from "./tasks.routes";
 
 const prisma = new PrismaClient();
 
@@ -11,5 +12,6 @@ router.get("/", (req, res) => {
 });
 
 router.use("/list", listsRouter);
+router.use("/task", tasksRouter);
 
 export { router };
