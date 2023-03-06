@@ -40,23 +40,20 @@ class TasksControllers {
   }
   public async CreateTasks(req: Request, res: Response) {
     try {
-      const { name, description, degree, listId } = req.body;
+      const { name, description, state, degree, listId } = req.body;
       const nameExist = await prisma.task.findUnique({ where: { name } });
-      if (nameExist) {
-        res.json({ message: "Já exite uma task com esse nome" });
-      } else {
-        const task = await prisma.task.create({
-          data: {
-            name,
-            description,
-            degree,
-            list: {
-              connect: { id: listId },
-            },
+      const task = await prisma.task.create({
+        data: {
+          name,
+          description,
+          state,
+          degree,
+          list: {
+            connect: { id: listId },
           },
-        });
-        return res.status(201).send(task);
-      }
+        },
+      });
+      return res.status(201).send(task);
     } catch (err) {
       console.log(err);
       return res.status(500).json({ message: "Internal server error" });
@@ -67,9 +64,8 @@ class TasksControllers {
   public async UpdateTask(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const { name, description, degree, listId } = req.body;
+      const { name, description, state, degree, listId } = req.body;
       const nameExist = await prisma.task.findUnique({ where: { name } });
-
       if (nameExist && nameExist.id !== id) {
         res.json({ message: "Já exite uma task com esse nome" });
       } else {
@@ -77,6 +73,7 @@ class TasksControllers {
           data: {
             name,
             description,
+            state,
             degree,
             listId,
           },
@@ -94,14 +91,10 @@ class TasksControllers {
   public async DeleteTask(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const taskExits = await prisma.task.findFirst({
-        where: { id },
-      });
+      const taskExits = await prisma.task.findFirst({ where: { id } });
       if (taskExits) {
-        await prisma.task.delete({
-          where: { id },
-        });
-        res.status(204);
+        await prisma.task.delete({ where: { id: id } });
+        return res.status(204).json(taskExits);
       } else {
         res.status(404).json({ message: "Essa task não existe" });
       }

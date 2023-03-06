@@ -55,11 +55,11 @@ class ListsControllers {
   }
   public async createList(req: Request, res: Response) {
     try {
-      const { name, position, color } = req.body;
+      const { name, position, type, color } = req.body;
       const nameExist = await prisma.list.findUnique({ where: { name } });
       if (!nameExist) {
         const list = await prisma.list.create({
-          data: { name, position, color },
+          data: { name, position, type, color },
         });
         return res.status(201).send(list);
       }

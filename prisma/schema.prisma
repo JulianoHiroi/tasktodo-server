@@ -14,6 +14,7 @@ model List {
   id       String  @id @default(uuid()) @map("_id")
   name     String  @unique
   position Int?
+  type     String
   color    String? @default("#000000")
   tasks    Task[]
 }
@@ -22,6 +23,7 @@ model Task {
   id          String @id @default(uuid()) @map("_id")
   name        String @unique
   description String
+  state       String @default("pendente")
   degree      Int
   listId      String
   list        List   @relation(fields: [listId], references: [id])
