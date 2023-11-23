@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [development]
+    branches: [main]
 
 jobs:
   build:
@@ -23,7 +23,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           port: ${{ secrets.SSH_PORT }}
           key: ${{  secrets.SSH_KEY }}
-          source: "."
+          source: "./teste"
           target: "~/teste/"
 
       - name: Install dependencies on server and restart
